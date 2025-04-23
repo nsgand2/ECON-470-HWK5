@@ -1,0 +1,71 @@
+---
+title: "Homework 5"
+author: "Nikhita Gandhe"
+date: "04/22/2025"
+format: pdf
+---
+
+Please find the link to my GitHub repository here: https://github.com/nsgand2/ECON-470-HWK5.git 
+
+# Question 1
+
+# Plot the share of the adult population with direct purchase health insurance over time.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata)
+
+# Load Data
+df <- read.table("C:/Users/Nikhita Gandhe/Documents/GitHub/ECON-470-HWK5/data/output/acs_medicaid.txt", header=TRUE, sep = "\t")
+
+
+# Inspect your column names
+names(df)
+
+# Summarize by year
+dp_by_year <- df %>%
+  # drop missing values
+  filter(!is.na(ins_direct)) %>%    
+  mutate(dir_share = ins_direct/adult_pop) %>%
+  group_by(year) %>%                     
+  summarise(
+    avg_direct_purchase = mean(ins_direct, na.rm = TRUE)
+  )
+
+
+# Plot it
+library(ggplot2)
+ggplot(dp_by_year, aes(x = year, y = avg_direct_purchase)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = unique(dp_by_year$year)) +
+  labs(
+    title = "Share of Adult Population with Direct-Purchase Health Insurance",
+    x     = "Year",
+    y     = "Direct-Purchase Share (%)"
+  ) +
+  theme_minimal()
+```
+
+# Question 2
+# Discuss the reduction in direct purchase health insurance in later years. Can you list a couple of policies that might have affected the success of the direct purchase insurance market?
+
+
+ In the later years (especially post-2016), there was a noticeable decline in direct-purchase health insurance. This decline can be attributed to several key policy changes:
+
+ 1. Repeal of the Individual Mandate Penalty (2017 Tax Cuts and Jobs Act)
+ This penalty was a core component of the Affordable Care Act (ACA).
+
+ Repealing it reduced the incentive for healthy individuals to purchase insurance, which led to adverse selection in the individual market (higher premiums, fewer enrollees).
+
+ 2. Expansion of Short-Term and Association Health Plans (Trump Admin, 2018)
+ These alternatives were often cheaper but offered fewer benefits and protections.
+
+ They siphoned younger, healthier consumers out of ACA-compliant plans, destabilizing the risk pool in the individual market.
+
+ 3. Cuts to ACA Outreach and Enrollment Assistance
+ Federal support for advertising and enrollment assistance was slashed between 2017–2019.
+
+ As a result, fewer people signed up for Marketplace plans, contributing to a decline in coverage via direct purchase.
